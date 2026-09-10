@@ -20,12 +20,15 @@ export default function EditCategoryPage() {
   })
 
   useEffect(() => {
-    fetchCategory()
+    const id = params.id as string
+    if (id) {
+      fetchCategory(id)
+    }
   }, [params.id])
 
-  const fetchCategory = async () => {
+  const fetchCategory = async (id: string) => {
     try {
-      const response = await fetch(`/api/categories/${params.id}`)
+      const response = await fetch(`/api/categories/${id}`)
       const data = await response.json()
       
       if (data) {
@@ -81,7 +84,7 @@ export default function EditCategoryPage() {
     setLoading(true)
 
     try {
-      const response = await fetch(`/api/categories/${params.id}`, {
+      const response = await fetch(`/api/categories/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

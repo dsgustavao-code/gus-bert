@@ -45,10 +45,8 @@ export default function Header() {
       if (session.user.role === 'admin') {
         window.location.href = '/admin/dashboard'
       } else {
-        // Show logout option or redirect to customer profile
-        if (confirm('Deseja sair da sua conta?')) {
-          signOut({ callbackUrl: '/' })
-        }
+        // Redirect to customer orders page
+        window.location.href = '/meus-pedidos'
       }
     } else {
       window.location.href = '/login'

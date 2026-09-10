@@ -8,7 +8,7 @@ export async function POST(request: Request) {
     const body = await request.text()
     const signature = headers().get('stripe-signature') || ''
 
-    let event
+    let event: any
 
     try {
       event = stripe.webhooks.constructEvent(
@@ -16,7 +16,7 @@ export async function POST(request: Request) {
         signature,
         process.env.STRIPE_WEBHOOK_SECRET || ''
       )
-    } catch (err) {
+    } catch (err: any) {
       console.error('Webhook signature verification failed:', err)
       return NextResponse.json(
         { error: 'Invalid signature' },
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
             neighborhood: metadata.neighborhood,
             total: session.amount_total / 100, // Convert cents to BRL
             shipping: 20, // Flat shipping rate
-            paymentMethod: session.payment_method_types[0] === 'pix' ? 'pix' : 'credit_card',
+            paymentMethod: session.payment_method_types?.[0] === 'pix' ? 'pix' : 'credit_card',
             status: 'paid',
             userId: metadata.userId,
             items: {

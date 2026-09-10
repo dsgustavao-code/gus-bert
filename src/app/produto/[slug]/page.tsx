@@ -101,7 +101,7 @@ export default function ProductPage() {
   const allSizes = [...shoeSizes, ...clothingSizes]
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-20">
       <Header />
       
       <div className="container mx-auto px-4 py-8">

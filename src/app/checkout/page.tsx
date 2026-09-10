@@ -2,19 +2,38 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { CreditCard, Truck } from 'lucide-react'
 
 export default function CheckoutPage() {
   const router = useRouter()
+  const { data: session, status } = useSession()
   const [cartItems, setCartItems] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
 
+  useEffect(() => {
+    if (status === 'loading') return // Wait for session to load
+    
+    if (status === 'unauthenticated') {
+      router.push('/login')
+      return
+    }
+
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]')
+    if (cart.length === 0) {
+      router.push('/carrinho')
+      return
+    }
+    setCartItems(cart)
+    setLoading(false)
+  }, [router, status])
+
   const [formData, setFormData] = useState({
-    customerName: '',
-    customerEmail: '',
+    customerName: session?.user?.name || '',
+    customerEmail: session?.user?.email || '',
     customerPhone: '',
     cep: '',
     state: '',
@@ -27,14 +46,14 @@ export default function CheckoutPage() {
   })
 
   useEffect(() => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]')
-    if (cart.length === 0) {
-      router.push('/carrinho')
-      return
+    if (session?.user) {
+      setFormData(prev => ({
+        ...prev,
+        customerName: session.user.name || '',
+        customerEmail: session.user.email || ''
+      }))
     }
-    setCartItems(cart)
-    setLoading(false)
-  }, [router])
+  }, [session])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({
@@ -91,7 +110,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white pt-20">
       <Header />
       
       <div className="container mx-auto px-4 py-8">

@@ -37,6 +37,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
+    const session = await getServerSession(authOptions)
     const body = await request.json()
     const {
       customerName,
@@ -74,6 +75,7 @@ export async function POST(request: Request) {
           total,
           shipping,
           paymentMethod,
+          userId: session?.user?.id || null,
           items: {
             create: items.map((item: any) => ({
               productId: item.productId,

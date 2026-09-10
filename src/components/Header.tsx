@@ -2,12 +2,14 @@
 
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { useSession, signOut } from 'next-auth/react'
 import { ShoppingCart, Search, Menu, X, User } from 'lucide-react'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [cartCount, setCartCount] = useState(0)
   const [isScrolled, setIsScrolled] = useState(false)
+  const { data: session } = useSession()
 
   useEffect(() => {
     const handleScroll = () => {
@@ -37,6 +39,22 @@ export default function Header() {
     }
   }, [])
 
+  const handleUserClick = () => {
+    if (session) {
+      // Show user menu or redirect to profile
+      if (session.user.role === 'admin') {
+        window.location.href = '/admin/dashboard'
+      } else {
+        // Show logout option or redirect to customer profile
+        if (confirm('Deseja sair da sua conta?')) {
+          signOut({ callbackUrl: '/' })
+        }
+      }
+    } else {
+      window.location.href = '/login'
+    }
+  }
+
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
       isScrolled ? 'bg-black/95 backdrop-blur-md shadow-lg' : 'bg-transparent'
@@ -65,8 +83,15 @@ export default function Header() {
             <button className="text-white hover:text-gray-300 transition">
               <Search size={20} />
             </button>
-            <button className="text-white hover:text-gray-300 transition">
+            <button 
+              onClick={handleUserClick}
+              className="text-white hover:text-gray-300 transition relative"
+              title={session ? `Logado como ${session.user.email}` : 'Fazer login'}
+            >
               <User size={20} />
+              {session && (
+                <span className="absolute -top-1 -right-1 bg-green-500 text-white text-xs w-2 h-2 rounded-full"></span>
+              )}
             </button>
             <Link href="/carrinho" className="text-white hover:text-gray-300 transition relative">
               <ShoppingCart size={20} />
@@ -104,7 +129,10 @@ export default function Header() {
               <button className="text-white hover:text-gray-300 transition">
                 <Search size={20} />
               </button>
-              <button className="text-white hover:text-gray-300 transition">
+              <button 
+                onClick={handleUserClick}
+                className="text-white hover:text-gray-300 transition"
+              >
                 <User size={20} />
               </button>
               <Link href="/carrinho" className="text-white hover:text-gray-300 transition relative">

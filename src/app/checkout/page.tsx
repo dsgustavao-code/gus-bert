@@ -67,27 +67,36 @@ export default function CheckoutPage() {
     setSubmitting(true)
 
     try {
-      const response = await fetch('/api/orders', {
+      // Create Stripe checkout session
+      const response = await fetch('/api/checkout/create-checkout-session', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          ...formData,
           items: cartItems,
-          shipping: 20
+          customerInfo: formData
         })
       })
 
-      if (response.ok) {
-        localStorage.removeItem('cart')
-        router.push('/pedido-sucesso')
-      } else {
-        alert('Erro ao processar pedido. Tente novamente.')
+      const { sessionId } = await response.json()
+
+      if (!sessionId) {
+        throw new Error('Failed to create checkout session')
+      }
+
+      // Redirect to Stripe Checkout
+      const stripe = (await import('@stripe/stripe-js')).loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
+      const stripeInstance = await stripe
+      
+      const { error } = await stripeInstance.redirectToCheckout({ sessionId })
+
+      if (error) {
+        throw new Error(error.message)
       }
     } catch (error) {
-      console.error('Error creating order:', error)
-      alert('Erro ao processar pedido. Tente novamente.')
+      console.error('Checkout error:', error)
+      alert('Erro ao processar checkout. Tente novamente.')
     } finally {
       setSubmitting(false)
     }

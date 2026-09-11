@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import { Plus, Edit, Trash2 } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function AdminCategoriesPage() {
   const router = useRouter()
   const [categories, setCategories] = useState<any[]>([])

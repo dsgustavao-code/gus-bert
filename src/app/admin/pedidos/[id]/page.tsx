@@ -5,6 +5,8 @@ import { useRouter, useParams } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import { ArrowLeft, Package, MapPin, CreditCard, ExternalLink } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function OrderDetailPage() {
   const router = useRouter()
   const params = useParams()

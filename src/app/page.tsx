@@ -7,6 +7,8 @@ import Footer from '@/components/Footer'
 import Link from 'next/link'
 import { ArrowRight, MessageCircle, Menu, X, Search, User, ShoppingCart } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function Home() {
   const [products, setProducts] = useState<any[]>([])
   const [categories, setCategories] = useState<any[]>([])

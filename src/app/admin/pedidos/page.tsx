@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import { Search, Eye } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function AdminOrdersPage() {
   const router = useRouter()
   const [orders, setOrders] = useState<any[]>([])

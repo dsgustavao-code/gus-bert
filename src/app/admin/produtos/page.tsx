@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import { Plus, Edit, Trash2, Search, ExternalLink } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function AdminProductsPage() {
   const router = useRouter()
   const [products, setProducts] = useState<any[]>([])

@@ -5,6 +5,8 @@ import { useRouter, useParams } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import { ArrowLeft, Upload, X } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function EditProductPage() {
   const router = useRouter()
   const params = useParams()

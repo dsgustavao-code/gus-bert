@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import { ArrowLeft, Upload, X } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function NewProductPage() {
   const router = useRouter()
   const [categories, setCategories] = useState<any[]>([])

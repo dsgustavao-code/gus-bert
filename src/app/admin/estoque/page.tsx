@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation'
 import AdminLayout from '@/components/AdminLayout'
 import { AlertTriangle, Package } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function AdminStockPage() {
   const router = useRouter()
   const [products, setProducts] = useState<any[]>([])

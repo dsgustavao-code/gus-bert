@@ -1,0 +1,4 @@
+# Force Vercel to ignore cache
+.next
+node_modules
+.cache

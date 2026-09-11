@@ -48,8 +48,13 @@ export async function GET(request: Request) {
     return NextResponse.json(products)
   } catch (error) {
     console.error('Error fetching products:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
-      { error: 'Failed to fetch products' },
+      { 
+        error: 'Failed to fetch products',
+        details: errorMessage,
+        database: process.env.DATABASE_URL ? 'configured' : 'missing'
+      },
       { status: 500 }
     )
   }

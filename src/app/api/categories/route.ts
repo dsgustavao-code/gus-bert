@@ -18,8 +18,13 @@ export async function GET() {
     return NextResponse.json(categories)
   } catch (error) {
     console.error('Error fetching categories:', error)
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error'
     return NextResponse.json(
-      { error: 'Failed to fetch categories' },
+      { 
+        error: 'Failed to fetch categories',
+        details: errorMessage,
+        database: process.env.DATABASE_URL ? 'configured' : 'missing'
+      },
       { status: 500 }
     )
   }

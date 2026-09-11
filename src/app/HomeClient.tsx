@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { ArrowRight, MessageCircle, Menu, X, Search, User, ShoppingCart } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 
 export default function HomeClient() {
   const [products, setProducts] = useState<any[]>([])
@@ -11,14 +11,9 @@ export default function HomeClient() {
   const [featuredProducts, setFeaturedProducts] = useState<any[]>([])
   const [newProducts, setNewProducts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [cartCount, setCartCount] = useState(0)
 
   useEffect(() => {
     fetchData()
-    updateCartCount()
-    window.addEventListener('cart-updated', updateCartCount)
-    return () => window.removeEventListener('cart-updated', updateCartCount)
   }, [])
 
   const fetchData = async () => {
@@ -46,200 +41,181 @@ export default function HomeClient() {
     }
   }
 
-  const updateCartCount = () => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]')
-    setCartCount(cart.reduce((sum: number, item: any) => sum + item.quantity, 0))
-  }
-
-  const addToCart = (product: any) => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]')
-    const existingItem = cart.find((item: any) => item.id === product.id)
-    
-    if (existingItem) {
-      existingItem.quantity += 1
-    } else {
-      cart.push({
-        id: product.id,
-        name: product.name,
-        price: product.promotionalPrice || product.price,
-        image: product.images?.[0]?.url || '',
-        quantity: 1,
-        size: 'M',
-        color: 'Preto'
-      })
-    }
-    
-    localStorage.setItem('cart', JSON.stringify(cart))
-    window.dispatchEvent(new Event('cart-updated'))
-    alert('Produto adicionado ao carrinho!')
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-white pt-20">
-        <div className="container mx-auto px-4 py-16">
-          <p className="text-center">Carregando...</p>
-        </div>
-      </div>
-    )
-  }
-
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative h-[600px] bg-gradient-to-r from-black to-gray-900 flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0 bg-black/50" />
+      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+        {/* Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: 'url(/fire.png)' }}
+        />
+        <div className="absolute inset-0 bg-black/60" />
+        
+        {/* Content */}
         <div className="relative z-10 text-center px-4">
           <motion.h1
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-5xl md:text-7xl font-bold text-white mb-6"
+            transition={{ duration: 0.8 }}
+            className="text-6xl md:text-8xl font-bold text-white mb-4 tracking-wider"
           >
             GUS & BERT
           </motion.h1>
+          
           <motion.p
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-xl md:text-2xl text-gray-200 mb-8"
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-2xl md:text-3xl text-white mb-6 font-semibold"
           >
-            Streetwear & Sneakers Premium
+            QUALIDADE E PREÇO BAIXO
           </motion.p>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
+          
+          <motion.p
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
-            className="flex gap-4 justify-center"
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="text-lg md:text-xl text-gray-300 mb-8"
+          >
+            Da nossa cidade, para o mundo, Pederneiras-Sp
+          </motion.p>
+          
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
           >
             <Link
               href="/produtos"
-              className="px-8 py-3 bg-white text-black rounded-lg font-semibold hover:bg-gray-100 transition"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black rounded-lg font-bold text-lg hover:bg-gray-100 transition-all transform hover:scale-105"
             >
-              Ver Produtos
-            </Link>
-            <Link
-              href="/carrinho"
-              className="px-8 py-3 border border-white text-white rounded-lg font-semibold hover:bg-white hover:text-black transition"
-            >
-              Ver Carrinho
+              EXPLORAR COLEÇÃO
+              <ArrowRight className="w-6 h-6" />
             </Link>
           </motion.div>
         </div>
       </section>
 
       {/* Featured Products */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8 text-black">Promoções</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {featuredProducts.map((product) => (
-              <div key={product.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                {product.images && product.images.length > 0 ? (
-                  <img
-                    src={product.images[0].url}
-                    alt={product.name}
-                    className="w-full h-64 object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
-                    <span className="text-gray-400">Sem imagem</span>
-                  </div>
-                )}
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg mb-2 text-black">{product.name}</h3>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="text-gray-400 line-through text-sm">
-                        R$ {product.price.toFixed(2)}
-                      </span>
-                      <span className="text-black font-bold ml-2">
-                        R$ {product.promotionalPrice.toFixed(2)}
-                      </span>
+      {!loading && featuredProducts.length > 0 && (
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-4xl font-bold mb-12 text-black text-center">Promoções</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {featuredProducts.map((product) => (
+                <Link
+                  key={product.id}
+                  href={`/produto/${product.slug}`}
+                  className="group"
+                >
+                  <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all transform hover:-translate-y-2">
+                    {product.images && product.images.length > 0 ? (
+                      <img
+                        src={product.images[0].url}
+                        alt={product.name}
+                        className="w-full h-72 object-cover group-hover:scale-105 transition-transform"
+                      />
+                    ) : (
+                      <div className="w-full h-72 bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-400">Sem imagem</span>
+                      </div>
+                    )}
+                    <div className="p-6">
+                      <h3 className="font-semibold text-xl mb-3 text-black">{product.name}</h3>
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <span className="text-gray-400 line-through text-sm">
+                            R$ {product.price.toFixed(2)}
+                          </span>
+                          <span className="text-black font-bold ml-2 text-xl">
+                            R$ {product.promotionalPrice.toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="mt-4 w-full py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition"
-                  >
-                    Adicionar ao Carrinho
-                  </button>
-                </div>
-              </div>
-            ))}
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* New Products */}
-      <section className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8 text-black">Novidades</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {newProducts.map((product) => (
-              <div key={product.id} className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-lg transition-shadow">
-                {product.images && product.images.length > 0 ? (
-                  <img
-                    src={product.images[0].url}
-                    alt={product.name}
-                    className="w-full h-64 object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-64 bg-gray-200 flex items-center justify-center">
-                    <span className="text-gray-400">Sem imagem</span>
+      {!loading && newProducts.length > 0 && (
+        <section className="py-20 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <h2 className="text-4xl font-bold mb-12 text-black text-center">Novidades</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {newProducts.map((product) => (
+                <Link
+                  key={product.id}
+                  href={`/produto/${product.slug}`}
+                  className="group"
+                >
+                  <div className="bg-white border border-gray-200 rounded-lg overflow-hidden hover:shadow-xl transition-all transform hover:-translate-y-2">
+                    {product.images && product.images.length > 0 ? (
+                      <img
+                        src={product.images[0].url}
+                        alt={product.name}
+                        className="w-full h-72 object-cover group-hover:scale-105 transition-transform"
+                      />
+                    ) : (
+                      <div className="w-full h-72 bg-gray-200 flex items-center justify-center">
+                        <span className="text-gray-400">Sem imagem</span>
+                      </div>
+                    )}
+                    <div className="p-6">
+                      <h3 className="font-semibold text-xl mb-3 text-black">{product.name}</h3>
+                      <div className="flex items-center justify-between">
+                        <span className="text-black font-bold text-xl">
+                          R$ {(product.promotionalPrice || product.price).toFixed(2)}
+                        </span>
+                      </div>
+                    </div>
                   </div>
-                )}
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg mb-2 text-black">{product.name}</h3>
-                  <div className="flex items-center justify-between">
-                    <span className="text-black font-bold">
-                      R$ {(product.promotionalPrice || product.price).toFixed(2)}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => addToCart(product)}
-                    className="mt-4 w-full py-2 bg-black text-white rounded-lg hover:bg-gray-800 transition"
-                  >
-                    Adicionar ao Carrinho
-                  </button>
-                </div>
-              </div>
-            ))}
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Categories */}
-      <section className="py-16 bg-white">
-        <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold mb-8 text-black">Categorias</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {categories.map((category) => (
-              <Link
-                key={category.id}
-                href={`/produtos?category=${category.id}`}
-                className="relative h-48 bg-gradient-to-r from-gray-900 to-gray-700 rounded-lg overflow-hidden group"
-              >
-                <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition" />
-                <div className="relative z-10 h-full flex items-center justify-center">
-                  <h3 className="text-2xl font-bold text-white">{category.name}</h3>
-                </div>
-              </Link>
-            ))}
+      {!loading && categories.length > 0 && (
+        <section className="py-20 bg-white">
+          <div className="container mx-auto px-4">
+            <h2 className="text-4xl font-bold mb-12 text-black text-center">Categorias</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+              {categories.map((category) => (
+                <Link
+                  key={category.id}
+                  href={`/produtos?category=${category.id}`}
+                  className="relative h-64 bg-gradient-to-r from-gray-900 to-gray-700 rounded-lg overflow-hidden group transform hover:scale-105 transition-all"
+                >
+                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/50 transition" />
+                  <div className="relative z-10 h-full flex items-center justify-center">
+                    <h3 className="text-3xl font-bold text-white">{category.name}</h3>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* CTA Section */}
-      <section className="py-16 bg-black text-white">
+      <section className="py-20 bg-black text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-4">Pronto para encontrar seu estilo?</h2>
-          <p className="text-gray-300 mb-8">Explore nossa coleção exclusiva de streetwear e sneakers</p>
+          <h2 className="text-4xl font-bold mb-6">Pronto para encontrar seu estilo?</h2>
+          <p className="text-gray-300 mb-8 text-xl">Explore nossa coleção exclusiva de streetwear e sneakers</p>
           <Link
             href="/produtos"
-            className="inline-flex items-center gap-2 px-8 py-3 bg-white text-black rounded-lg font-semibold hover:bg-gray-100 transition"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black rounded-lg font-bold text-lg hover:bg-gray-100 transition-all transform hover:scale-105"
           >
             Ver Todos os Produtos
-            <ArrowRight className="w-5 h-5" />
+            <ArrowRight className="w-6 h-6" />
           </Link>
         </div>
       </section>

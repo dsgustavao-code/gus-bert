@@ -6,6 +6,8 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function CartPage() {
   const router = useRouter()
   const [cartItems, setCartItems] = useState<any[]>([])

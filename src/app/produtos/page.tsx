@@ -6,6 +6,8 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { SlidersHorizontal, Search } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function ProductsPage() {
   const searchParams = useSearchParams()
   const [products, setProducts] = useState<any[]>([])

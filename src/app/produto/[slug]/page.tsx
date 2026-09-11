@@ -6,6 +6,8 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { ShoppingCart, Heart, Share2 } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function ProductPage() {
   const params = useParams()
   const [product, setProduct] = useState<any>(null)

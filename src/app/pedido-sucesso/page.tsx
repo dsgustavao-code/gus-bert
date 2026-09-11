@@ -7,6 +7,7 @@ import Footer from '@/components/Footer'
 import { CheckCircle, Package, Truck, Clock } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
 
 export default function OrderSuccessPage() {
   const searchParams = useSearchParams()

@@ -7,6 +7,7 @@ import Footer from '@/components/Footer'
 import { SlidersHorizontal, Search } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
 
 export default function ProductsPage() {
   const searchParams = useSearchParams()

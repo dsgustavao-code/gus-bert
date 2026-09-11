@@ -7,6 +7,7 @@ import Footer from '@/components/Footer'
 import { ShoppingCart, Heart, Share2 } from 'lucide-react'
 
 export const dynamic = 'force-dynamic'
+export const fetchCache = 'force-no-store'
 
 export default function ProductPage() {
   const params = useParams()

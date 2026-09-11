@@ -6,6 +6,8 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { CheckCircle, Package, Truck, Clock } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function OrderSuccessPage() {
   const searchParams = useSearchParams()
   const router = useRouter()

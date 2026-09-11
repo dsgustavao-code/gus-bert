@@ -7,6 +7,8 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { Package, Truck, Clock, CheckCircle, ArrowLeft } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function OrderTrackingPage() {
   const params = useParams()
   const router = useRouter()

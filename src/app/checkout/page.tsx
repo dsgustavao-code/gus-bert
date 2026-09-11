@@ -7,6 +7,8 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import { CreditCard, Truck } from 'lucide-react'
 
+export const dynamic = 'force-dynamic'
+
 export default function CheckoutPage() {
   const router = useRouter()
   const { data: session, status } = useSession()

@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { revalidatePath } from 'next/cache'
 
 export async function GET(
   request: Request,
@@ -43,7 +44,14 @@ export async function GET(
     }
 
     console.log('Product found:', product.name)
-    return NextResponse.json(product)
+    const response = NextResponse.json(product)
+    
+    // Add cache control headers
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+    
+    return response
   } catch (error) {
     console.error('Error fetching product:', error)
     return NextResponse.json(
@@ -148,6 +156,11 @@ export async function DELETE(
     await prisma.product.delete({
       where: { id: params.id }
     })
+
+    // Revalidate cache
+    revalidatePath('/produtos')
+    revalidatePath('/')
+    revalidatePath('/api/products')
 
     return NextResponse.json({ success: true })
   } catch (error) {

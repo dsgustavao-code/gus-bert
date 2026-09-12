@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
+import { revalidatePath } from 'next/cache'
 
 export async function GET() {
   try {
@@ -15,7 +16,14 @@ export async function GET() {
       orderBy: { name: 'asc' }
     })
 
-    return NextResponse.json(categories)
+    const response = NextResponse.json(categories)
+    
+    // Add cache control headers
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0')
+    response.headers.set('Pragma', 'no-cache')
+    response.headers.set('Expires', '0')
+    
+    return response
   } catch (error) {
     console.error('Error fetching categories:', error)
     return NextResponse.json(

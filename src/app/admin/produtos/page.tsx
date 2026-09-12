@@ -40,8 +40,17 @@ export default function AdminProductsPage() {
     if (!confirm('Tem certeza que deseja excluir este produto?')) return
 
     try {
-      await fetch(`/api/products/${id}`, { method: 'DELETE' })
+      const response = await fetch(`/api/products/${id}`, { method: 'DELETE' })
+      
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || 'Erro ao excluir produto')
+      }
+      
+      // Remove from local state and refetch
       setProducts(products.filter(p => p.id !== id))
+      await fetchData() // Refetch to ensure sync with database
+      alert('Produto excluído com sucesso!')
     } catch (error) {
       console.error('Error deleting product:', error)
       alert('Erro ao excluir produto')

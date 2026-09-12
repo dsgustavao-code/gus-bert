@@ -8,6 +8,8 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
+    console.log('Fetching product with ID:', params.id)
+    
     // Try to find by ID first, then by slug
     let product = await prisma.product.findUnique({
       where: { id: params.id },
@@ -20,6 +22,7 @@ export async function GET(
     })
 
     if (!product) {
+      console.log('Product not found by ID, trying slug:', params.id)
       product = await prisma.product.findUnique({
         where: { slug: params.id },
         include: {
@@ -32,12 +35,14 @@ export async function GET(
     }
 
     if (!product) {
+      console.log('Product not found')
       return NextResponse.json(
         { error: 'Product not found' },
         { status: 404 }
       )
     }
 
+    console.log('Product found:', product.name)
     return NextResponse.json(product)
   } catch (error) {
     console.error('Error fetching product:', error)

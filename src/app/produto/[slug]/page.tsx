@@ -252,13 +252,13 @@ export default function ProductPage() {
                 </button>
                 <span className="text-xl font-semibold">{quantity}</span>
                 <button
-                  onClick={() => setQuantity(Math.min(product.stock, quantity + 1))}
+                  onClick={() => setQuantity(Math.min(product.stock || 0, quantity + 1))}
                   className="w-10 h-10 border border-gray-300 rounded-lg hover:bg-gray-100"
                 >
                   +
                 </button>
                 <span className="text-gray-600">
-                  {product.stock} disponíveis
+                  {product.stock || 0} disponíveis
                 </span>
               </div>
             </div>
@@ -285,6 +285,41 @@ export default function ProductPage() {
               >
                 <ShoppingCart size={20} />
                 Adicionar ao Carrinho
+              </button>
+              <button
+                onClick={() => {
+                  if (!selectedSize) {
+                    alert('Por favor, selecione um tamanho')
+                    return
+                  }
+                  if (!selectedColor) {
+                    alert('Por favor, selecione uma cor')
+                    return
+                  }
+                  if (product.stock < quantity) {
+                    alert('Quantidade indisponível em estoque')
+                    return
+                  }
+                  // Add to cart and go to checkout
+                  const cartItem = {
+                    productId: product.id,
+                    name: product.name,
+                    price: product.promotionalPrice || product.price,
+                    image: product.images?.[0]?.url,
+                    size: selectedSize,
+                    color: selectedColor,
+                    quantity
+                  }
+                  const existingCart = JSON.parse(localStorage.getItem('cart') || '[]')
+                  const updatedCart = [...existingCart, cartItem]
+                  localStorage.setItem('cart', JSON.stringify(updatedCart))
+                  window.dispatchEvent(new Event('cart-updated'))
+                  window.location.href = '/checkout'
+                }}
+                disabled={product.stock === 0}
+                className="flex-1 flex items-center justify-center gap-2 bg-gray-800 text-white py-4 rounded-lg font-semibold hover:bg-gray-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                Comprar Agora
               </button>
               <button className="p-4 border border-gray-300 rounded-lg hover:bg-gray-100 transition">
                 <Heart size={20} />

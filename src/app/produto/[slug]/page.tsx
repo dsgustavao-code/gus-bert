@@ -153,14 +153,18 @@ export default function ProductPage() {
             
             <div className="mb-6">
               <div className="flex items-center gap-3">
-                <span className="text-3xl font-bold">R$ {price.toFixed(2)}</span>
-                {product.promotionalPrice && (
+                {price ? (
+                  <span className="text-3xl font-bold">R$ {price.toFixed(2)}</span>
+                ) : (
+                  <span className="text-3xl font-bold">Preço sob consulta</span>
+                )}
+                {product.promotionalPrice && product.price && (
                   <span className="text-xl text-gray-400 line-through">
                     R$ {product.price.toFixed(2)}
                   </span>
                 )}
               </div>
-              {product.promotionalPrice && (
+              {product.promotionalPrice && product.price && (
                 <span className="text-green-600 text-sm">
                   {Math.round((1 - product.promotionalPrice / product.price) * 100)}% OFF
                 </span>

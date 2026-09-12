@@ -125,12 +125,24 @@ export default function HomeClient() {
                       <h3 className="font-semibold text-xl mb-3 text-black">{product.name}</h3>
                       <div className="flex items-center justify-between">
                         <div>
-                          <span className="text-gray-400 line-through text-sm">
-                            R$ {product.price.toFixed(2)}
-                          </span>
-                          <span className="text-black font-bold ml-2 text-xl">
-                            R$ {product.promotionalPrice.toFixed(2)}
-                          </span>
+                          {product.price && (
+                            <span className="text-gray-400 line-through text-sm">
+                              R$ {product.price.toFixed(2)}
+                            </span>
+                          )}
+                          {product.promotionalPrice ? (
+                            <span className="text-black font-bold ml-2 text-xl">
+                              R$ {product.promotionalPrice.toFixed(2)}
+                            </span>
+                          ) : product.price ? (
+                            <span className="text-black font-bold ml-2 text-xl">
+                              R$ {product.price.toFixed(2)}
+                            </span>
+                          ) : (
+                            <span className="text-black font-bold ml-2 text-xl">
+                              Preço sob consulta
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>

@@ -179,16 +179,22 @@ export default function ProductsClient() {
                     <div>
                       {product.promotionalPrice ? (
                         <>
-                          <span className="text-gray-400 line-through text-sm">
-                            R$ {product.price.toFixed(2)}
-                          </span>
+                          {product.price && (
+                            <span className="text-gray-400 line-through text-sm">
+                              R$ {product.price.toFixed(2)}
+                            </span>
+                          )}
                           <span className="text-black font-bold ml-2">
                             R$ {product.promotionalPrice.toFixed(2)}
                           </span>
                         </>
-                      ) : (
+                      ) : product.price ? (
                         <span className="text-black font-bold">
                           R$ {product.price.toFixed(2)}
+                        </span>
+                      ) : (
+                        <span className="text-black font-bold">
+                          Preço sob consulta
                         </span>
                       )}
                     </div>
